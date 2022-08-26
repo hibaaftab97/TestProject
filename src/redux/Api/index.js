@@ -1,83 +1,49 @@
-// minlength: 4; maxlength: 4; required: digit; // sms verification rule
-import {
-  dataToQueryParameter,
-  getConfigs,
-  getMessage,
-  handleResponse,
-  performNetworkRequest,
-} from './HelperFunction';
-import {base_url, custom_url, banner_url} from '../config';
-import initialStates from '../reducers/initialStates';
+import axios from 'axios';
+import {showToast} from './HelperFunction';
+import {useDispatch, useSelector} from 'react-redux';
+import {store} from '../store';
 
-export const post = async (endpoint, body, formData, queryParams) => {
-  const url =
-    base_url +
-    endpoint +
-    dataToQueryParameter(queryParams);
-  console.log(url, 'the url is here');
+var StoredState = store.getState();
+const instance = axios.create({
+  baseURL: 'https://jsonplaceholder.typicode.com/',
 
-  const configs = getConfigs('POST', body, formData);
-  try {
-    const networkResult = await performNetworkRequest(url, configs);
-    const result = await handleResponse(networkResult);
-    return Promise.resolve(result);
-  } catch (e) {
-    console.log('e == ', e);
-    const message = getMessage(e);
-    return Promise.reject(message);
-  }
-};
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization:
+      StoredState.authReducer.token &&
+      `Bearer ${StoredState.authReducer.token}`,
+  },
+});
 
-export const put = async (endpoint, body, formData, queryParams) => {
-  const url =
-    base_url +
-    endpoint +
-    dataToQueryParameter(queryParams);
-  console.log(url, 'the url is here');
+instance.interceptors.request.use(
+  config => {
+    console.log('REQUEST :', config);
+    if (store.getState().authReducer?.token !== null) {
+      let accessToken = store.getState().authReducer?.token;
+      if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+    }
+    return config;
+  },
+  error => {
+    // console.log("REQUEST FAILURE:", error);
+    showToast(error.message || 'Something went wrong');
+    return Promise.reject(error);
+  },
+);
 
-  const configs = getConfigs('PUT', body, formData);
-  try {
-    const networkResult = await performNetworkRequest(url, configs);
-    const result = await handleResponse(networkResult);
-    return Promise.resolve(result);
-  } catch (e) {
-    console.log('e == ', e);
-    const message = getMessage(e);
-    return Promise.reject(message);
-  }
-};
+instance.interceptors.response.use(
+  response => {
+    console.log('RESPONSE :', response?.data);
 
+    return response;
+  },
+  error => {
+    console.log('RESPONSE FAILURE:', error?.response);
 
-export const get = async (endpoint, queryParams) => {
-  const url =
-    base_url +
-    endpoint +
-    dataToQueryParameter(queryParams);
+    return Promise.reject(error);
+  },
+);
 
-  const configs = getConfigs('GET');
-
-  console.log(
-    'url',
-    url,
-    '  dataToQueryParameter(queryParams) ',
-    dataToQueryParameter(queryParams),
-  );
-
-  try {
-    const networkResult = await performNetworkRequest(url, configs);
-    const result = await handleResponse(networkResult);
-
-    return Promise.resolve(result);
-  } catch (e) {
-    const message = getMessage(e);
-    return Promise.reject(message);
-  }
-};
-
-
-
-const Api = {
-  post: post,
-  get: get,
-};
-export default Api;
+export default instance;

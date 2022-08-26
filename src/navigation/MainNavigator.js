@@ -1,21 +1,20 @@
 import * as React from 'react';
 import 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import AuthStack from './AuthStack';
-import { store } from '../redux/store';
+import PostStack from './PostStack';
+
+import {store} from '../redux/store';
 import {useSelector} from 'react-redux';
 
-
 function MainNavigator() {
-
   const Stack = createStackNavigator();
   // const data = store.getState();
   const loggedIn = useSelector(state => state.authReducer.loggedin);
 
-
   return (
     <Stack.Navigator>
-{/* 
+      {/* 
       {loggedIn ? <Stack.Screen
         options={{ headerShown: false }}
         name="DrawerNavigator"
@@ -24,13 +23,18 @@ function MainNavigator() {
      
       />
         : */}
-         <Stack.Screen
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PostStack"
+        component={PostStack}
+      />
+
+      {/* <Stack.Screen
           options={{ headerShown: false }}
           name="AuthStack"
           component={AuthStack}
-        />
-        
-
+        /> */}
     </Stack.Navigator>
   );
 }

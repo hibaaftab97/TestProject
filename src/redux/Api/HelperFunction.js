@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { store } from '../store/index';
-import { View, Image, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {store} from '../store/index';
+import {View, Image, TouchableOpacity} from 'react-native';
 
 // import Toast from 'react-native-toast';
 
-import Toast from 'react-native-simple-toast'
+import Toast from 'react-native-simple-toast';
 const TAG = '__API__';
 export const LOG = (label, data) => {
   if (__DEV__) {
@@ -13,18 +13,16 @@ export const LOG = (label, data) => {
 };
 
 export const showToast = msg => {
-  console.log('messa',msg);
-  presentToast(getMessage(msg));
- 
+  console.log('messa', msg);
+  Toast.show(msg);
 };
 
-export const showGlobalToast = msg => { };
+export const showGlobalToast = msg => {};
 export const presentToast = message => {
- 
   Toast.show(message);
   //   // EventRegister.emit(events.showToast, getMessage(message))
 };
-export const handleResponse = ({ response, jsonResponse }) => {
+export const handleResponse = ({response, jsonResponse}) => {
   console.log('response.status : ', response.status);
 
   switch (response.status) {
@@ -71,8 +69,8 @@ export const performNetworkRequest = async (url, configs) => {
     console.log('response', response);
     // log('response', response);
     const jsonResponse = await response.json();
-    console.log('performNetworkRequest response', { jsonResponse, url, configs });
-    return Promise.resolve({ response, jsonResponse });
+    console.log('performNetworkRequest response', {jsonResponse, url, configs});
+    return Promise.resolve({response, jsonResponse});
   } catch (e) {
     log('error', e);
     return Promise.reject(e);
@@ -154,7 +152,6 @@ export const jsonToFormdata = data => {
 export const urlToFormdata = data => {
   //saadia's form data func //formatData
 
- 
   let formBody = [];
   for (let property in data) {
     let encodedKey = encodeURIComponent(property);
@@ -175,13 +172,11 @@ export const getConfigs = (method, body, formData = true) => {
   const data = store.getState();
 
   if (formData == true) {
-     if( method == 'PUT'){
-     headers['Content-Type'] = 'application/x-www-form-urlencoded';
-
+    if (method == 'PUT') {
+      headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    } else {
+      headers['Content-Type'] = 'multipart/form-data';
     }
-    else{
-    headers['Content-Type'] = 'multipart/form-data';
-     }
     if (data.authReducer.token) {
       headers['Authorization'] = 'Bearer ' + data.authReducer.token;
     }
@@ -202,13 +197,10 @@ export const getConfigs = (method, body, formData = true) => {
   if (body) {
     if (method == 'POST' || method == 'PUT') {
       if (formData == true) {
-        if(method == 'PUT'){
+        if (method == 'PUT') {
           configs['body'] = urlToFormdata(body);
-
-        }
-        else{
+        } else {
           configs['body'] = jsonToFormdata(body);
-
         }
       } else {
         configs['body'] = JSON.stringify(body);

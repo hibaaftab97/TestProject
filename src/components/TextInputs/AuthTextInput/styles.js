@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import { Fonts } from '../../../assets/fonts';
+import {Fonts} from '../../../assets/fonts';
 import {vh, vw} from '../../../units/index';
 // import {Fonts} from '../../../assets/fonts';
 import theme from '../../../utils/theme';
@@ -8,7 +8,7 @@ export default style = StyleSheet.create({
   textInputView: {
     width: 80 * vw,
     height: 7 * vh,
-    borderColor:'#e9e9e9',
+    borderColor: '#e9e9e9',
     borderWidth: 0.1 * vw,
     flexDirection: 'row',
     alignItems: 'center',
@@ -16,12 +16,12 @@ export default style = StyleSheet.create({
     borderRadius: 1 * vw,
     marginTop: 2 * vh,
   },
-  label:{
+  label: {
     marginLeft: 2 * vw,
     color: theme.primary,
-    fontFamily:Fonts.PSB,
+    fontFamily: Fonts.PSB,
     marginTop: 2 * vh,
-   fontSize:1.7*vh
+    fontSize: 1.7 * vh,
   },
   rightIconContainer: {
     height: vh * 5,
@@ -44,18 +44,17 @@ export default style = StyleSheet.create({
     height: 7 * vh,
     backgroundColor: theme.defaultBackgroundColor,
     flexDirection: 'row',
-    alignItems:'center',
-    borderRadius: 1.5* vw,
+    alignItems: 'center',
+    borderRadius: 1.5 * vw,
     marginTop: 1 * vh,
-
   },
 
   textInputStyle: {
     marginLeft: 2 * vw,
     color: theme.black,
-    fontFamily:Fonts.PSR,
+    fontFamily: Fonts.PSR,
     width: 66 * vw,
-    height:20*vh
+    height: 20 * vh,
   },
 
   emailStyle: {
